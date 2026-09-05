@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUT HID Architecture</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f0f0f;
+            color: #ffffff;
+            padding: 40px 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2rem;
+        }
+        .diagram {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+        .layer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .box {
+            background: #252525;
+            border: 2px solid #0078d4;
+            border-radius: 8px;
+            padding: 20px;
+            min-width: 200px;
+            max-width: 300px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 120, 212, 0.3);
+        }
+        .box.nut { border-color: #107c10; }
+        .box.windows { border-color: #0078d4; }
+        .box.gui { border-color: #ffb900; }
+        .box h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+        }
+        .box p {
+            font-size: 0.85rem;
+            color: #a0a0a0;
+            margin: 5px 0;
+        }
+        .arrow {
+            text-align: center;
+            font-size: 2rem;
+            color: #666;
+            margin: 10px 0;
+        }
+        .arrow-down {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            display: inline-block;
+        }
+        .legend {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        .legend h3 {
+            margin-top: 0;
+        }
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 20px 10px 0;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        .flow-steps {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        .step {
+            display: flex;
+            gap: 20px;
+            margin: 15px 0;
+            align-items: flex-start;
+        }
+        .step-number {
+            background: #0078d4;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .step-text {
+            flex: 1;
+        }
+        code {
+            background: #252525;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            color: #ffb900;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔌 NUT HID System Architecture</h1>
+
+        <!-- Main Architecture Diagram -->
+        <div class="diagram">
+            <!-- Physical UPS Layer -->
+            <div class="layer">
+                <div class="box nut">
+                    <h3>🔋 Network UPS</h3>
+                    <p>APC, Eaton, CyberPower, etc.</p>
+                    <p>USB or SNMP connected</p>
+                </div>
+            </div>
+
+            <div class="arrow"><span class="arrow-down">▼▼▼</span></div>
+
+            <!-- NUT Server Layer -->
+            <div class="layer">
+                <div class="box nut">
+                    <h3>🖥️ NUT Server</h3>
+                    <p>Linux/Windows/BSD</p>
+                    <p>Port 3493</p>
+                    <p><code>upsd</code> daemon</p>
+                </div>
+            </div>
+
+            <div class="arrow"><span class="arrow-down">▼▼▼</span></div>
+
+            <!-- Network Connection -->
+            <div class="layer">
+                <div class="box windows">
+                    <h3>🌐 Network</h3>
+                    <p>TCP/IP (port 3493)</p>
+                    <p>NUT Protocol</p>
+                </div>
+            </div>
+
+            <div class="arrow"><span class="arrow-down">▼▼▼</span></div>
+
+            <!-- Windows User Space -->
+            <div class="layer">
+                <div class="box gui">
+                    <h3>🖼️ NUT HID GUI</h3>
+                    <p>Tauri Application</p>
+                    <p>Configuration & Monitoring</p>
+                    <p>Real-time status display</p>
+                </div>
+                <div class="box windows">
+                    <h3>⌨️ nut_hid_cli</h3>
+                    <p>Command-line tool</p>
+                    <p>SWDevice API</p>
+                    <p>Virtual device creation</p>
+                </div>
+            </div>
+
+            <div class="arrow"><span class="arrow-down">▼▼▼</span></div>
+
+            <!-- Driver Layer -->
+            <div class="layer">
+                <div class="box windows">
+                    <h3>🔧 nut_hid_driver</h3>
+                    <p>UMDF HID Driver</p>
+                    <p>Rust + windows-rs</p>
+                    <p>Virtual HID device</p>
+                </div>
+            </div>
+
+            <div class="arrow"><span class="arrow-down">▼▼▼</span></div>
+
+            <!-- Windows Kernel -->
+            <div class="layer">
+                <div class="box windows">
+                    <h3>🪟️ HidBatt.sys</h3>
+                    <p>Windows HID Battery Driver</p>
+                    <p>Native kernel driver</p>
+                    <p>Power management integration</p>
+                </div>
+            </div>
+
+            <div class="arrow"><span class="arrow-down">▼▼▼</span></div>
+
+            <!-- Windows OS Integration -->
+            <div class="layer">
+                <div class="box windows">
+                    <h3>⚡ Windows Power Management</h3>
+                    <p>Battery icon in taskbar</p>
+                    <p>Low battery warnings</p>
+                    <p>Auto hibernate/shutdown</p>
+                </div>
+                <div class="box windows">
+                    <h3>📊 Device Manager</h3>
+                    <p>Batteries class</p>
+                    <p>"HID UPS Battery"</p>
+                    <p>Status: Working properly</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <h3>📖 Component Types</h3>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #107c10;"></div>
+                <span>NUT / Linux</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #0078d4;"></div>
+                <span>Windows Native</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #ffb900;"></div>
+                <span>NUT HID GUI (This Project)</span>
+            </div>
+        </div>
+
+        <!-- Data Flow -->
+        <div class="flow-steps">
+            <h3>📈 Data Flow: From UPS to Windows</h3>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-text">
+                    <strong>UPS Reports Status</strong><br>
+                    Physical UPS reports battery level, runtime, and status via USB or SNMP to NUT server
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-text">
+                    <strong>NUT Server Polls</strong><br>
+                    <code>upsd</code> daemon polls UPS every 2-15 seconds, stores in shared memory
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-text">
+                    <strong>GUI/Driver Connects</strong><br>
+                    <code>nut_hid_driver</code> connects to NUT server via TCP port 3493 using <code>rups</code> library
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-text">
+                    <strong>NUT Variables Queried</strong><br>
+                    Driver queries: <code>battery.charge</code>, <code>battery.runtime</code>, <code>ups.status</code>, etc.
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-text">
+                    <strong>HID Reports Generated</strong><br>
+                    Driver converts NUT data to HID Power Device Class reports (binary format)
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">6</div>
+                <div class="step-text">
+                    <strong>HidBatt.sys Reads</strong><br>
+                    Windows native <code>HidBatt.sys</code> driver reads HID reports via standard HID interface
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">7</div>
+                <div class="step-text">
+                    <strong>Windows Power Management</strong><br>
+                    Windows battery icon shows UPS status, triggers low-battery actions as configured
+                </div>
+            </div>
+        </div>
+
+        <!-- GUI Architecture -->
+        <div class="flow-steps">
+            <h3>🖼️ NUT HID GUI Internal Architecture</h3>
+            
+            <div class="layer">
+                <div class="box gui">
+                    <h3>Frontend (HTML/CSS/JS)</h3>
+                    <p>Tauri webview</p>
+                    <p>Dark theme UI</p>
+                    <p>Real-time updates</p>
+                </div>
+                <div class="box gui">
+                    <h3>IPC Bridge</h3>
+                    <p>Tauri invoke()</p>
+                    <p>Async commands</p>
+                    <p>Type-safe</p>
+                </div>
+                <div class="box gui">
+                    <h3>Rust Backend</h3>
+                    <p>Tauri commands</p>
+                    <p>State management</p>
+                    <p>Error handling</p>
+                </div>
+            </div>
+
+            <div class="arrow"><span class="arrow-down">▼▼▼</span></div>
+
+            <div class="layer">
+                <div class="box windows">
+                    <h3>rups (NUT Client)</h3>
+                    <p>TCP connection</p>
+                    <p>Protocol parsing</p>
+                    <p>Variable queries</p>
+                </div>
+                <div class="box windows">
+                    <h3>SWDevice API</h3>
+                    <p>Virtual device creation</p>
+                    <p>Property store</p>
+                    <p>PnP integration</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #333; color: #666;">
+            <p>NUT HID GUI v0.1.0 | Based on <a href="https://github.com/elupus/nut_hid" style="color: #0078d4;">nut_hid</a> by Joakim Plate</p>
+        </div>
+    </div>
+</body>
+</html>

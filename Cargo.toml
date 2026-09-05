@@ -1,0 +1,47 @@
+[package]
+name = "nut_hid_gui"
+version = "0.1.0"
+edition = "2024"
+authors = ["Joakim Plate"]
+description = "GUI application for configuring NUT HID virtual UPS devices"
+license = "Apache-2.0"
+
+[dependencies]
+# Core
+tokio = { version = "1.42", features = ["full"] }
+log = "0.4.27"
+env_logger = "0.11"
+anyhow = "1.0"
+thiserror = "1.0"
+
+# NUT client
+rups = "0.6.1"
+
+# Windows APIs
+windows = { version = "0.58", features = [
+    "Win32_Devices_Enumeration_Pnp",
+    "Win32_Foundation",
+    "Win32_System_Com",
+    "Win32_System_LibraryLoader",
+    "Win32_System_Threading",
+    "Win32_UI_WindowsAndMessaging",
+]}
+
+# GUI framework - using Tauri v2 for modern web-based UI
+tauri = { version = "2.0", features = [] }
+tauri-build = { version = "2.0", features = [] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Utilities
+chrono = "0.4"
+parking_lot = "0.12"
+
+[build-dependencies]
+tauri-build = { version = "2.0", features = [] }
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3
+strip = true

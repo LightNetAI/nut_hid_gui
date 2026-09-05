@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUT HID Configurator</title>
+    <script type="module" src="/js/app.js"></script>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+                <h1>NUT HID Configurator</h1>
+            </div>
+            <div class="connection-status" id="connectionStatus">
+                <span class="status-indicator disconnected"></span>
+                <span class="status-text">Disconnected</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Connection Panel -->
+            <section class="panel connection-panel">
+                <h2>🔌 NUT Server Connection</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="hostInput">Host</label>
+                        <input type="text" id="hostInput" placeholder="192.168.1.100" value="localhost">
+                    </div>
+                    <div class="form-group">
+                        <label for="portInput">Port</label>
+                        <input type="number" id="portInput" value="3493" min="1" max="65535">
+                    </div>
+                </div>
+                <div class="button-row">
+                    <button id="testConnectionBtn" class="btn btn-primary">
+                        <span class="btn-icon">🔍</span>
+                        Test Connection
+                    </button>
+                    <button id="createDeviceBtn" class="btn btn-success" disabled>
+                        <span class="btn-icon">➕</span>
+                        Create Virtual Device
+                    </button>
+                </div>
+                <div id="connectionResult" class="result-message hidden"></div>
+            </section>
+
+            <!-- UPS Status Panel -->
+            <section class="panel status-panel">
+                <h2>📊 UPS Status</h2>
+                <div class="status-grid">
+                    <div class="status-card">
+                        <div class="status-icon">🔋</div>
+                        <div class="status-value" id="batteryCharge">--%</div>
+                        <div class="status-label">Battery Charge</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="batteryProgress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="status-card">
+                        <div class="status-icon">⏱️</div>
+                        <div class="status-value" id="batteryRuntime">--:--</div>
+                        <div class="status-label">Runtime Remaining</div>
+                    </div>
+                    <div class="status-card">
+                        <div class="status-icon">⚡</div>
+                        <div class="status-value" id="inputVoltage">-- V</div>
+                        <div class="status-label">Input Voltage</div>
+                    </div>
+                    <div class="status-card">
+                        <div class="status-icon">📈</div>
+                        <div class="status-value" id="upsLoad">--%</div>
+                        <div class="status-label">UPS Load</div>
+                    </div>
+                </div>
+
+                <div class="status-flags">
+                    <h3>Status Flags</h3>
+                    <div class="flag-grid" id="statusFlags">
+                        <div class="flag-item" data-flag="online">
+                            <span class="flag-icon">🟢</span>
+                            <span class="flag-label">Online</span>
+                        </div>
+                        <div class="flag-item" data-flag="charging">
+                            <span class="flag-icon">🔌</span>
+                            <span class="flag-label">Charging</span>
+                        </div>
+                        <div class="flag-item" data-flag="discharging">
+                            <span class="flag-icon">🔋</span>
+                            <span class="flag-label">Discharging</span>
+                        </div>
+                        <div class="flag-item" data-flag="lowBattery">
+                            <span class="flag-icon">⚠️</span>
+                            <span class="flag-label">Low Battery</span>
+                        </div>
+                        <div class="flag-item" data-flag="fullyCharged">
+                            <span class="flag-icon">✅</span>
+                            <span class="flag-label">Fully Charged</span>
+                        </div>
+                        <div class="flag-item" data-flag="communicationLost">
+                            <span class="flag-icon">❌</span>
+                            <span class="flag-label">Comm. Lost</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-row">
+                    <button id="refreshStatusBtn" class="btn btn-secondary" disabled>
+                        <span class="btn-icon">🔄</span>
+                        Refresh Status
+                    </button>
+                    <button id="toggleMonitoringBtn" class="btn btn-primary" disabled>
+                        <span class="btn-icon">▶️</span>
+                        Start Monitoring
+                    </button>
+                </div>
+            </section>
+
+            <!-- Devices Panel -->
+            <section class="panel devices-panel">
+                <h2>🖥️ Virtual Devices</h2>
+                <div class="devices-list" id="devicesList">
+                    <div class="empty-state">
+                        <p>No virtual devices created</p>
+                        <p class="hint">Connect to a NUT server and click "Create Virtual Device"</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Log Panel -->
+            <section class="panel log-panel">
+                <h2>📝 Event Log</h2>
+                <div class="log-container" id="logContainer">
+                    <!-- Log entries will be added here -->
+                </div>
+                <div class="button-row">
+                    <button id="clearLogBtn" class="btn btn-secondary">
+                        <span class="btn-icon">🗑️</span>
+                        Clear Log
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>NUT HID GUI v0.1.0 | Based on <a href="https://github.com/elupus/nut_hid" target="_blank">nut_hid</a> by Joakim Plate</p>
+        </footer>
+    </div>
+</body>
+</html>

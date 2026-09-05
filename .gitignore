@@ -1,0 +1,62 @@
+# Rust
+/target/
+**/*.rs.bk
+*.pdb
+Cargo.lock
+
+# Tauri
+src-tauri/target/
+src-tauri/Cargo.lock
+
+# Node
+node_modules/
+npm-debug.log
+package-lock.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build outputs
+dist/
+build/
+*.msi
+*.exe
+*.app
+*.dmg
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Testing
+coverage/
+*.gcno
+*.gcda
+
+# Temporary
+tmp/
+temp/
+*.tmp
+
+# Certificates
+*.cer
+*.pfx
+*.p12
+
+# Test signing
+WDKTestCert.cer
+WDKTestCert.pvk
