@@ -33,7 +33,9 @@ jobs:
       run: npm install
       
     - name: Build release
-      run: cargo tauri build --release
+      run: cargo tauri build
+      env:
+        CI: true
       
     - name: Upload MSI installer
       uses: actions/upload-artifact@v4
