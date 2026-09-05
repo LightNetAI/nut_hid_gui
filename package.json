@@ -1,0 +1,14 @@
+{
+  "name": "nut_hid_gui",
+  "version": "0.1.0",
+  "description": "NUT HID GUI - Modern interface for network UPS management",
+  "scripts": {
+    "dev": "echo 'Development mode - no frontend build required'",
+    "build": "echo 'Build complete - using vanilla JS'"
+  },
+  "devDependencies": {
+    "@tauri-apps/api": "^2.0.0",
+    "@tauri-apps/cli": "^2.0.0"
+  },
+  "dependencies": {}
+}
