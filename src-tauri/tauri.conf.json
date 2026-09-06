@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "identifier": "com.nut-hid.gui",
   "build": {
-    "frontendDist": ".",
+    "frontendDist": "./public",
     "devUrl": "http://localhost:1420",
     "beforeDevCommand": "",
     "beforeBuildCommand": ""
